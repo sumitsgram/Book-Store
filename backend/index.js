@@ -1,22 +1,26 @@
 import express from "express";
 const app = express();
 import mongoose from 'mongoose';
-import { Book } from './models/bookModel.js'
+import booksRoute from './routes/booksRoute.js';
+import cors from 'cors';
 import dotenv from 'dotenv';
 dotenv.config();
-const PORT = 4000;
+const PORT = 5000;
 
-// app.get('/',(req,res)=> {
-// console.log(req)
-// return res.status(234).send('Welcome to my project');
-// });
-
-// Route for saving a new book
+// middlewares
+app.use(express.json());
+app.use('/books', booksRoute)
+app.use(cors({
+            origin:'http://localhost:3000',
+            method:['GET','POST','PUT','DELETE'],
+            allowedHeaders:['Content-Type'],
+})
+);
 
 mongoose
 .connect(process.env.MONGO)
 .then(()=>{
-    console.log(`App is connected to database:`);
+    console.log(`Connected to database !`);
     app.listen(PORT,()=>{
         console.log(`App is working on port ${PORT}`)
     })
